@@ -70,10 +70,12 @@ router.post('/enviar', async(req, res) =>{
 });
 // este servicio es para poder sacar datos de postgresql
 router.get('/verT', async(req, res) => {
- await client.query("SELECT* FROM alejandro")
+ await client.query("SELECT array_to_json(array_agg(p.*)) FROM alejandro p")
   .then(response => {
     console.log(response.rows)
-    res.send(response.rows)
+    res.status(200).json({
+      "msn": response.rows
+    });
     client.end()
 })
 .catch(err => {
